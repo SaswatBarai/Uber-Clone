@@ -1,6 +1,7 @@
 import { validationResult } from "express-validator";
 import userModel from "../model/user.model.js";
 import bcrypt from "bcrypt";
+import blackListModel from "../model/blacklistToken.model.js"
 
 const userController = async (req, res) => {
     try {
@@ -83,4 +84,11 @@ const getProfile = async (req, res) => {
     }
 };
 
-export { userController, loginController, getProfile };
+const logoutController = async (req, res) => {
+    res.clearCookie("token");
+    const token =  req.cookies.token || req.headers.authorization.split(" ")[1];
+    await blackListModel.create({ token });
+    res.status(200).json({ message: "Logged out successfully" });
+}
+
+export { userController, loginController, getProfile,logoutController };

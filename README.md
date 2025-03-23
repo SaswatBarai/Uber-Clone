@@ -156,3 +156,35 @@ curl -X GET \
   http://localhost:4000/user/getProfile \
   -H 'Authorization: Bearer JWT_TOKEN_STRING'
 ```
+
+## User Logout
+**Endpoint:** `GET /user/logout`
+
+### Description
+Logs out the currently authenticated user by invalidating their token. Requires authentication.
+
+### Headers
+```
+Authorization: Bearer JWT_TOKEN_STRING
+```
+
+### Response
+
+#### Success (200 OK)
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+### Status Codes
+- **200 OK** - User successfully logged out
+- **401 Unauthorized** - Missing or invalid authentication token
+- **500 Internal Server Error** - Server-side error
+
+### Example
+```bash
+curl -X GET \
+  http://localhost:4000/user/logout \
+  -H 'Authorization: Bearer JWT_TOKEN_STRING'
+```
