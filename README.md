@@ -64,3 +64,55 @@ curl -X POST \
     "password": "password123"
   }'
 ```
+
+## User Login
+**Endpoint:** `POST /user/login`
+
+### Description
+Authenticates a user and provides an authentication token for accessing protected resources.
+
+### Request Body
+```json
+{
+  "email": "String",       // Required, valid email format
+  "password": "String"     // Required
+}
+```
+
+### Response
+
+#### Success (200 OK)
+```json
+{
+  "token": "JWT_TOKEN_STRING",
+  "user": {
+    "fullname": {
+      "firstname": "String",
+      "lastname": "String"
+    },
+    "email": "String",
+    "socketId": null,
+    "_id": "String"
+  }
+}
+```
+
+### Status Codes
+- **200 OK** - User successfully authenticated
+- **400 Bad Request** - Validation error or invalid credentials
+  - Possible messages:
+    - "Please fill in all fields"
+    - "Invalid Credentials"
+    - "Please enter a valid email address"
+- **500 Internal Server Error** - Server-side error
+
+### Example
+```bash
+curl -X POST \
+  http://localhost:4000/user/login \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "email": "john.doe@example.com",
+    "password": "password123"
+  }'
+```
