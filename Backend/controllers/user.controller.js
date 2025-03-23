@@ -14,7 +14,7 @@ const userController = async (req, res) => {
             return res.status(400).json({ message: "Please fill in all fields" });
         }
         const { firstname, lastname } = fullname;
-        const user = await userModel.findOne({ email });
+        const user = await userModel.findOne({ email }).select("+password");
         if (user) {
             return res.status(400).json({ message: "User already exists" });
         }
@@ -41,21 +41,28 @@ const loginController = async (req, res) => {
         if (!errors.isEmpty()) {
             return res.status(400).json({ message: errors.array()[0].msg });
         }
-        console.log(req.body);
 
         const { email, password } = req.body;
         if (!email || !password) {
             return res.status(400).json({ message: "Please fill in all fields" });
         }
-        const user = await userModel.findOne({ email }).select("-__v -updatedAt -createdAt");
+
+        // Include the password field explicitly
+        const user = await userModel.findOne({ email }).select("+password");
         if (!user) {
             return res.status(400).json({ message: "Invalid Credentials" });
         }
-        const isMatch = user.matchPassword(password);   
+
+        const isMatch = await user.matchPassword(password);
         if (!isMatch) {
             return res.status(400).json({ message: "Invalid Credentials" });
         }
+
         const token = await user.genrateAuthToken();
+        res.cookie("token", token, {
+            httpOnly: true,
+            expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        });
         res.status(200).json({ token, user });
     } catch (error) {
         console.error("Error in loginController:", error.message);
@@ -63,4 +70,17 @@ const loginController = async (req, res) => {
     }
 };
 
-export { userController, loginController }
+const getProfile = async (req, res) => {
+    try {
+        const user = req.user;
+
+        // Convert the user object and filter out unwanted fields
+        const { createdAt, updatedAt, __v, password, ...filteredUser } = user.toObject();
+
+        res.status(200).json({ user: filteredUser });
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error", error: error.message });
+    }
+};
+
+export { userController, loginController, getProfile };

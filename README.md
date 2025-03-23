@@ -116,3 +116,43 @@ curl -X POST \
     "password": "password123"
   }'
 ```
+
+## Get User Profile
+**Endpoint:** `GET /user/getProfile`
+
+### Description
+Retrieves the authenticated user's profile information. Requires authentication.
+
+### Headers
+```
+Authorization: Bearer JWT_TOKEN_STRING
+```
+
+### Response
+
+#### Success (200 OK)
+```json
+{
+  "user": {
+    "fullname": {
+      "firstname": "String",
+      "lastname": "String"
+    },
+    "email": "String",
+    "socketId": null,
+    "_id": "String"
+  }
+}
+```
+
+### Status Codes
+- **200 OK** - Profile successfully retrieved
+- **401 Unauthorized** - Missing or invalid authentication token
+- **500 Internal Server Error** - Server-side error
+
+### Example
+```bash
+curl -X GET \
+  http://localhost:4000/user/getProfile \
+  -H 'Authorization: Bearer JWT_TOKEN_STRING'
+```

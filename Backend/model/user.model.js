@@ -42,9 +42,9 @@ userSchema.methods.genrateAuthToken = function () {
     return token;
 };
 
-userSchema.methods.matchPassword = async (enteredPassword)=>{
-    return await bcrypt.compare(enteredPassword,this.password); 
-}
+userSchema.methods.matchPassword = async function (enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password);
+};
 
 userSchema.statics.hashPassword = async (password)=>{
     return await bcrypt.hash(password,10);  
