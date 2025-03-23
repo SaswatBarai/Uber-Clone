@@ -188,3 +188,73 @@ curl -X GET \
   http://localhost:4000/user/logout \
   -H 'Authorization: Bearer JWT_TOKEN_STRING'
 ```
+
+## Captain Registration
+**Endpoint:** `POST /captain/register`
+
+### Description
+Registers a new captain (driver) account in the system.
+
+### Request Body
+```json
+{
+  "fullname": {
+    "firstname": "String",  // Required, minimum 3 characters
+    "lastname": "String"    // Required, minimum 3 characters
+  },
+  "email": "String",        // Required, valid email format
+  "password": "String",     // Required, minimum 6 characters
+  "vehicle": {
+    "color": "String",      // Required, minimum 3 characters
+    "plate": "String",      // Required, minimum 3 characters
+    "capacity": Number,     // Required, minimum 1
+    "vehicleType": "String" // Required, one of: "car", "motorcycle", "auto"
+  }
+}
+```
+
+### Response
+
+#### Success (201 Created)
+```json
+{
+  "msg": "Captain registered successfully"
+}
+```
+
+### Status Codes
+- **201 Created** - Captain successfully registered
+- **400 Bad Request** - Validation error or captain already exists
+  - Possible messages:
+    - "Please enter all fields"
+    - "Captain already exists"
+    - "First name must be at least 3 characters long"
+    - "Last name must be at least 3 characters long"
+    - "Password must be at least 6 characters long"
+    - "Color must be at least 3 characters long"
+    - "Plate must be at least 3 characters long"
+    - "Capacity must be at least 1"
+    - "Invalid vehicle type"
+    - "Please enter a valid email address"
+- **500 Internal Server Error** - Server-side error
+
+### Example
+```bash
+curl -X POST \
+  http://localhost:4000/captain/register \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.captain@example.com",
+    "password": "password123",
+    "vehicle": {
+      "color": "Black",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }'
+```
