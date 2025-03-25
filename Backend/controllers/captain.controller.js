@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
 import captainModel from "../model/captain.model.js";
+import BlacklistToken from "../model/blacklistToken.model.js";
 
 const captainRegisterController = async (req, res) => {
   const errors = validationResult(req);
@@ -94,7 +95,7 @@ const captainLoginController = async (req, res) => {
 
 const getProfile = async (req, res) => {
   try {
-    
+
     const user = req.captain;
     const { createdAt, updatedAt, __v, password, ...filteredUser } = user.toObject();
     res.status(200).json({ user: filteredUser });
@@ -104,4 +105,11 @@ const getProfile = async (req, res) => {
   }
 };
 
-export { captainRegisterController, captainLoginController,getProfile};
+const logoutContrroller = async (req,res) => {
+    const token =  req.cookies.token || req.headers.authorization?.split(" ")[1];
+    await BlacklistToken.create({token});
+    res.clearCookie("token");
+    res.status(200).json({ message: "Logged out successfully" });
+};
+
+export { captainRegisterController, captainLoginController,getProfile,logoutContrroller };

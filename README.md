@@ -375,3 +375,35 @@ curl -X GET \
   http://localhost:4000/captain/getProfile \
   -H 'Authorization: Bearer JWT_TOKEN_STRING'
 ```
+
+### 🚪 Captain Logout
+**Endpoint:** `POST /captain/logout`
+
+### Description
+Logs out the currently authenticated captain by invalidating their token. Requires authentication.
+
+### Headers
+```http
+Authorization: Bearer JWT_TOKEN_STRING
+```
+
+### Response
+
+#### ✅ Success (200 OK)
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+### Status Codes
+- **200 OK** - Captain successfully logged out
+- **401 Unauthorized** - Missing or invalid authentication token
+- **500 Internal Server Error** - Server-side error
+
+### Example
+```bash
+curl -X POST \
+  http://localhost:4000/captain/logout \
+  -H 'Authorization: Bearer JWT_TOKEN_STRING'
+```

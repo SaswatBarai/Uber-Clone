@@ -40,14 +40,13 @@ const captainAuth = async (req, res, next) => {
 
     const isBlacklisted = await BlacklistToken.findOne({ token });
     if (isBlacklisted) {
-        return res.status(401).json({
+        return res.status(402).json({
             message: "Unauthorized"
         });
     }
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log(decoded);
         
         const captain = await captainModel.findById(decoded.id).select("-__v -updatedAt -createdAt");
         if (!captain) {
