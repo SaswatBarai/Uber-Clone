@@ -64,7 +64,6 @@ const captainSchema = new Schema({
     }
 });
 
-// Define methods BEFORE creating the model
 captainSchema.methods.generateToken = async function() {
     const token = jwt.sign({id: this._id}, process.env.JWT_SECRET, {
         expiresIn: "24hr"
@@ -80,8 +79,6 @@ captainSchema.statics.hashedPassword = async function(password) {
     return await bcrypt.hash(password, 10);
 };
 
-// Create model AFTER defining methods
 const captain = mongoose.model("captain", captainSchema);
 
-// Export the model
 export default captain;

@@ -1,6 +1,8 @@
-# Uber Clone API Documentation
+# 🚗 Uber Clone API Documentation
 
-## User Registration
+## 🧑 User Endpoints
+
+### 📝 User Registration
 **Endpoint:** `POST /user/register`
 
 ### Description
@@ -20,7 +22,7 @@ Creates a new user account in the system. Returns an authentication token upon s
 
 ### Response
 
-#### Success (201 Created)
+#### ✅ Success (201 Created)
 ```json
 {
   "token": "JWT_TOKEN_STRING",
@@ -65,7 +67,7 @@ curl -X POST \
   }'
 ```
 
-## User Login
+### 🔑 User Login
 **Endpoint:** `POST /user/login`
 
 ### Description
@@ -81,7 +83,7 @@ Authenticates a user and provides an authentication token for accessing protecte
 
 ### Response
 
-#### Success (200 OK)
+#### ✅ Success (200 OK)
 ```json
 {
   "token": "JWT_TOKEN_STRING",
@@ -117,20 +119,20 @@ curl -X POST \
   }'
 ```
 
-## Get User Profile
+### 👤 Get User Profile
 **Endpoint:** `GET /user/getProfile`
 
 ### Description
 Retrieves the authenticated user's profile information. Requires authentication.
 
 ### Headers
-```
+```http
 Authorization: Bearer JWT_TOKEN_STRING
 ```
 
 ### Response
 
-#### Success (200 OK)
+#### ✅ Success (200 OK)
 ```json
 {
   "user": {
@@ -157,20 +159,20 @@ curl -X GET \
   -H 'Authorization: Bearer JWT_TOKEN_STRING'
 ```
 
-## User Logout
+### 🚪 User Logout
 **Endpoint:** `GET /user/logout`
 
 ### Description
 Logs out the currently authenticated user by invalidating their token. Requires authentication.
 
 ### Headers
-```
+```http
 Authorization: Bearer JWT_TOKEN_STRING
 ```
 
 ### Response
 
-#### Success (200 OK)
+#### ✅ Success (200 OK)
 ```json
 {
   "message": "Logged out successfully"
@@ -189,7 +191,9 @@ curl -X GET \
   -H 'Authorization: Bearer JWT_TOKEN_STRING'
 ```
 
-## Captain Registration
+## 🚕 Captain Endpoints
+
+### 📝 Captain Registration
 **Endpoint:** `POST /captain/register`
 
 ### Description
@@ -215,7 +219,7 @@ Registers a new captain (driver) account in the system.
 
 ### Response
 
-#### Success (201 Created)
+#### ✅ Success (201 Created)
 ```json
 {
   "msg": "Captain registered successfully"
@@ -257,4 +261,117 @@ curl -X POST \
       "vehicleType": "car"
     }
   }'
+```
+
+### 🔑 Captain Login
+**Endpoint:** `POST /captain/login`
+
+### Description
+Authenticates a captain (driver) and provides an authentication token for accessing protected resources.
+
+### Request Body
+```json
+{
+  "email": "String",       // Required, valid email format
+  "password": "String"     // Required
+}
+```
+
+### Response
+
+#### ✅ Success (200 OK)
+```json
+{
+  "user": {
+    "fullname": {
+      "firstname": "String",
+      "lastname": "String"
+    },
+    "email": "String",
+    "status": "inactive",
+    "vehicle": {
+      "color": "String",
+      "plate": "String",
+      "capacity": Number,
+      "vehicleType": "String"
+    },
+    "location": {
+      "lat": Number,
+      "lng": Number
+    },
+    "_id": "String"
+  },
+  "token": "JWT_TOKEN_STRING"
+}
+```
+
+### Status Codes
+- **200 OK** - Captain successfully authenticated
+- **400 Bad Request** - Validation error or invalid credentials
+  - Possible messages:
+    - "Please enter all fields"
+    - "Something Went Wrong !"
+    - "Please enter a valid email address"
+- **500 Internal Server Error** - Server-side error
+
+### Example
+```bash
+curl -X POST \
+  http://localhost:4000/captain/login \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "email": "john.captain@example.com",
+    "password": "password123"
+  }'
+```
+
+### 👤 Get Captain Profile
+**Endpoint:** `GET /captain/getProfile`
+
+### Description
+Retrieves the authenticated captain's profile information. Requires authentication.
+
+### Headers
+```http
+Authorization: Bearer JWT_TOKEN_STRING
+```
+
+### Response
+
+#### ✅ Success (200 OK)
+```json
+{
+  "user": {
+    "fullname": {
+      "firstname": "String",
+      "lastname": "String"
+    },
+    "email": "String",
+    "status": "inactive",
+    "vehicle": {
+      "color": "String",
+      "plate": "String",
+      "capacity": Number,
+      "vehicleType": "String"
+    },
+    "location": {
+      "lat": Number,
+      "lng": Number
+    },
+    "_id": "String"
+  }
+}
+```
+
+### Status Codes
+- **200 OK** - Profile successfully retrieved
+- **401 Unauthorized** - Missing or invalid authentication token
+- **404 Not Found** - Captain not found
+- **500 Internal Server Error** - Server-side error
+
+### Example
+```bash
+curl -X GET \
+  http://localhost:4000/captain/getProfile \
+  -H 'Authorization: Bearer JWT_TOKEN_STRING'
 ```
